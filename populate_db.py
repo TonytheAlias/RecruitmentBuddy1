@@ -3,7 +3,7 @@ from pathlib import Path
 
 def init_db():
     """Initialize the database with schema"""
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('recruitmentbuddy.db')
     with open('schema.sql', 'r') as f:
         conn.executescript(f.read())
     conn.close()
@@ -11,52 +11,52 @@ def init_db():
 
 def populate_majors():
     """Populate the majors table with sample data"""
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('recruitmentbuddy.db')
     cursor = conn.cursor()
     
-    # Major data
+    # Major data - using correct column names from schema.sql
     majors = [
         (
             "Computer Science",
             "Study of computation, programming, and information systems",
-            "Software Engineer, Data Scientist, Systems Analyst",
-            "Programming, problem-solving, mathematical reasoning",
+            "Software Engineer,Data Scientist,Systems Analyst",
+            "Programming,Problem-solving,Mathematical reasoning",
             0.9, 0.6, 0.4, 0.9
         ),
         (
             "Psychology",
             "Study of human behavior and mental processes",
-            "Counselor, Research Psychologist, Human Resources",
-            "Active listening, research, empathy, analysis",
+            "Counselor,Research Psychologist,Human Resources",
+            "Active listening,Research,Empathy,Analysis",
             0.7, 0.5, 0.9, 0.3
         ),
         (
             "Graphic Design",
             "Visual communication and digital art creation",
-            "UI/UX Designer, Brand Designer, Art Director",
-            "Visual design, creativity, software proficiency",
+            "UI/UX Designer,Brand Designer,Art Director",
+            "Visual design,Creativity,Software proficiency",
             0.4, 0.9, 0.6, 0.7
         ),
         (
             "Mechanical Engineering",
             "Design and manufacturing of mechanical systems",
-            "Product Designer, Manufacturing Engineer, R&D Engineer",
-            "Mathematics, CAD, problem-solving",
+            "Product Designer,Manufacturing Engineer,R&D Engineer",
+            "Mathematics,CAD,Problem-solving",
             0.9, 0.7, 0.5, 0.9
         ),
         (
             "Business Administration",
             "Management of business operations and strategy",
-            "Business Manager, Entrepreneur, Consultant",
-            "Leadership, financial analysis, communication",
+            "Business Manager,Entrepreneur,Consultant",
+            "Leadership,Financial analysis,Communication",
             0.7, 0.6, 0.8, 0.5
         )
     ]
     
-    # Insert majors
+    # Insert majors - using correct column names
     cursor.executemany("""
         INSERT INTO majors (
-            name, description, career_opportunities, required_skills,
+            name, description, careers, skills,
             analytical_weight, creative_weight, social_weight, technical_weight
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """, majors)

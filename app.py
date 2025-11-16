@@ -1,10 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, g, flash, send_from_directory
 from pathlib import Path
 import sqlite3
-import json
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler
-import random
 from functools import wraps
 from werkzeug.exceptions import HTTPException
 import logging
@@ -140,15 +136,17 @@ def calculate_major_matches(scores, personality_type_id=None):
     db = get_db()
     majors = db.execute('SELECT * FROM majors').fetchall()
     
-    # Convert scores to 0-1 scale
-    scaler = MinMaxScaler()
-    score_values = np.array([[
-        scores['analytical_score'],
-        scores['creative_score'],
-        scores['social_score'],
-        scores['technical_score']
-    ]])
-    normalized_scores = scaler.fit_transform(score_values)[0]
+    # Simple normalization to 0-1 scale (no scikit-learn needed)
+    def normalize(value, min_val=1, max_val=10):
+        return (value - min_val) / (max_val - min_val)
+    
+    # Normalize scores
+    normalized_scores = [
+        normalize(scores['analytical_score']),
+        normalize(scores['creative_score']),
+        normalize(scores['social_score']),
+        normalize(scores['technical_score'])
+    ]
     
     matches = []
     for major in majors:
